@@ -31,6 +31,7 @@ void display_board(const vector<vector<space>>& b);
 void move_piece(vector<vector<space>>& b);
 void valid_move_check(int from_row, int from_col, int to_row, int to_col, const vector<vector<space>> b);
 
+
 int main()
 {
     while (true) {
@@ -102,7 +103,7 @@ void move_piece(vector<vector<space>>& b) {
         cin >> to_row;
         cin >> to_col;
 
-        valid_move_check(from_row, from_col, to_row, to_col, board);
+        valid_move_check(from_row, from_col, to_row, to_col, b);
 
         if (valid_move != true) {
 
@@ -190,6 +191,199 @@ void valid_move_check(int from_row, int from_col, int to_row, int to_col, const 
             valid_move = true;
 
             break;
+        case LANCE:
+            int total_spaces;
+            bool stop_check;
+
+            if (sente_turn == true) {
+
+                total_spaces = (from_row - 1) - 1;
+
+                for (int i = (from_row - 1) - 1; i >= 0; i--) {
+
+                    switch (b[i][from_col - 1]) {
+
+                        case EMPTY:
+                            //cout << "fine" << endl;
+                            break;
+                        default:
+                            stop_check = true;
+                            break;
+                    }
+
+                    if (stop_check == true) {
+
+                        //cout << "STOPPING CHECK" << endl;
+                        break;
+                    }
+
+                    //cout << total_spaces << endl;
+                    total_spaces--;
+                }
+
+                if (((to_row - 1) > (from_row - 1) || (to_row - 1) < total_spaces) || (to_col - 1) != (from_col - 1)) {
+
+                    cout << "Not a valid Lance move! Or you tried to move an opponents piece!" << endl;
+                    valid_move = false;
+                    return;
+                }
+            }
+
+            else if (sente_turn != true) {
+
+                total_spaces = (from_row - 1) + 1;
+
+                for (int i = (from_row - 1) + 1; i <= 8; i++) {
+
+                    switch (b[i][from_col - 1]) {
+
+                        case EMPTY:
+                            //cout << "fine" << endl;
+                            break;
+                        default:
+                            stop_check = true;
+                            break;
+                    }
+
+                    if (stop_check == true) {
+
+                        //cout << "STOPPING CHECK" << endl;
+                        break;
+                    }
+
+                    //cout << total_spaces << endl;
+                    total_spaces++;
+                }
+
+                if (((to_row - 1) < (from_row - 1) || (to_row - 1) > total_spaces) || (to_col - 1) != (from_col - 1)) {
+
+                    cout << "Not a valid Lance move! Or you tried to move an opponents piece!" << endl;
+                    valid_move = false;
+                    return;
+                }
+            }
+
+            valid_move = true;
+            break;
+
+        case ROOK:
+            int min_spaces_h;
+            int max_spaces_h;
+            int min_spaces_v;
+            int max_spaces_v;
+
+            bool no_check;     //Didn't work when I used the stop_check variable, so just declared a new one.
+
+            if (sente_turn == true) {
+
+                min_spaces_h = (from_row - 1) + 1;
+                max_spaces_h = (from_row - 1) - 1;
+                min_spaces_v = (from_col - 1) - 1;
+                max_spaces_v = (from_col - 1) + 1;
+
+                //Horizontal Check
+                for (int i = (from_row - 1) + 1; i <= 8; i++) {     //Behind
+
+                    switch (b[i][from_col - 1]) {
+
+                        case EMPTY:
+                            //cout << "fine" << endl;
+                            break;
+                        default:
+                            no_check = true;
+                            break;
+                    }
+
+                    if (no_check == true) {
+
+                        //cout << "STOPPING CHECK" << endl;
+                        break;
+                    }
+
+                    //cout << "min: " << min_spaces_h << endl;
+                    min_spaces_h++;
+                }
+
+                no_check = false;       //Set the value of no check back
+
+                for (int i = (from_row - 1) - 1; i >= 0; i--) {     //In front
+
+                    switch (b[i][from_col - 1]) {
+
+                        case EMPTY:
+                            //cout << "fine" << endl;
+                            break;
+                        default:
+                            no_check = true;
+                            break;
+                    }
+
+                    if (no_check == true) {
+
+                        //cout << "STOPPING CHECK" << endl;
+                        break;
+                    }
+
+                    //cout << "max: " << max_spaces_h << endl;
+                    max_spaces_h--;
+                }
+
+                no_check = false;
+
+                //Vertical Checks
+                for (int i = (from_col - 1) + 1; i <= 8; i++) {
+
+                    switch (b[from_row - 1][i]) {
+
+                        case EMPTY:
+                            //cout << "fine" << endl;
+                            break;
+                        default:
+                            no_check = true;
+                            break;
+                    }
+
+                    if (no_check == true) {
+
+                        //cout << "STOPPING CHECK" << endl;
+                        break;
+                    }
+
+                    //cout << "vmax: " << max_spaces_v << endl;
+                    max_spaces_v++;
+                }
+
+                no_check = false;
+
+                for (int i = (from_col - 1) - 1; i >= 0; i--) {
+
+                    switch (b[from_row - 1][i]) {
+
+                        case EMPTY:
+                            //cout << "fine" << endl;
+                            break;
+                        default:
+                            no_check = true;
+                            break;
+                    }
+
+                    if (no_check == true) {
+
+                        //cout << "STOPPING CHECK" << endl;
+                        break;
+                    }
+
+                    //cout << "vmin: " << min_spaces_v << endl;
+                    min_spaces_v--;
+                }
+            }
+
+            if (((to_row - 1) > min_spaces_h || (to_row - 1) < max_spaces_h) || ((to_col - 1) > max_spaces_v || (to_col - 1) < min_spaces_v)) {
+
+                    cout << "Not a valid Rook move! Or you tried to move an opponents piece!" << endl;
+                    valid_move = false;
+                    return;
+                }
     }
 
         if (b[to_row - 1][to_col - 1] != EMPTY) {
@@ -206,4 +400,3 @@ void valid_move_check(int from_row, int from_col, int to_row, int to_col, const 
 
     return;
 }
-
