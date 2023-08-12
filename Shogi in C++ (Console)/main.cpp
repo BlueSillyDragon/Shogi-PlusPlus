@@ -8,6 +8,7 @@ using namespace std;
 enum space {EMPTY, KING, GOLD, SILVER, KNIGHT, LANCE, BISHOP, ROOK, PAWN};
 bool valid_move;
 bool sente_turn = true;
+bool kanji_pieces = true;
 
 string turn = "Sente";
 
@@ -34,6 +35,89 @@ void valid_move_check(int from_row, int from_col, int to_row, int to_col, const 
 
 int main()
 {
+    char choice;
+    bool go_back;
+    bool invalid;
+
+    cout << "AoSakura's C++ Shogi Program." << endl << endl;
+    display_board(board);
+
+    do {
+
+        cout << endl << "What action would you like to preform? (N)ew Game, (S)ettings, (Q)uit" << endl;
+        cin >> choice;
+
+        switch (choice) {
+
+        case 'n':
+        case 'N':
+            cout << "Starting new game." << endl << endl;
+            go_back = false;
+            invalid = false;
+            break;
+        case 's':
+        case 'S':
+            cout << "What would you like to change? (L)anguage, (P)ieces, (B)ack" << endl;
+            go_back = false;
+            invalid = false;
+            cin >> choice;
+
+            switch (choice) {
+
+                case 'l':
+                case 'L':
+                    cout << "Select Language, (E)nglish, (J)apanese" << endl;
+
+                    go_back = false;
+                    invalid = false;
+
+                    break;
+                case 'p':
+                case 'P':
+                    cout << "Choose Piece set, (K)anji, (I)nternational" << endl;
+                    cin >> choice;
+
+                    switch (choice) {
+
+                        case 'k':
+                        case 'K':
+                            kanji_pieces = true;
+                            go_back = true;
+                            break;
+                        case 'i':
+                        case 'I':
+                            kanji_pieces = false;
+                            go_back = true;
+                            break;
+                        default:
+                            cout << "Not a valid choice!" << endl;
+                            invalid = true;
+                            break;
+                    }
+
+                    break;
+                case 'b':
+                case 'B':
+                    go_back = true;
+                    break;
+                default:
+                    cout << "Not a valid choice!" << endl;
+                    invalid = true;
+            }
+
+            break;
+        case 'q':
+        case 'Q':
+            cout << "Exiting..." << endl;
+            return 0;
+        default:
+            cout << "Not a valid choice!" << endl;
+            invalid = true;
+            break;
+        }
+    } while (go_back == true || invalid == true);
+
+
     while (true) {
 
         display_board(board);
@@ -42,6 +126,7 @@ int main()
     return 0;
 }
 
+
 void display_board(const vector<vector<space>>& b) {
 
     for (int i = 0; i < b.size(); i++) {
@@ -49,36 +134,74 @@ void display_board(const vector<vector<space>>& b) {
         for (int k = 0; k < b[i].size(); k++) {
 
             //cout << "#";
-            switch (board[i][k]) {
+            if (kanji_pieces == true) {
 
-                case EMPTY:
-                    cout << "空";
-                    break;
-                case KING:
-                    cout << "王";
-                    break;
-                case GOLD:
-                    cout << "金";
-                    break;
-                case SILVER:
-                    cout << "銀";
-                    break;
-                case KNIGHT:
-                    cout << "桂";
-                    break;
-                case LANCE:
-                    cout << "香";
-                    break;
-                case BISHOP:
-                    cout << "角";
-                    break;
-                case ROOK:
-                    cout << "飛";
-                    break;
-                case PAWN:
-                    cout << "歩";
-                    break;
+                switch (board[i][k]) {
+
+                    case EMPTY:
+                        cout << "空";
+                        break;
+                    case KING:
+                        cout << "王";
+                        break;
+                    case GOLD:
+                        cout << "金";
+                        break;
+                    case SILVER:
+                        cout << "銀";
+                        break;
+                    case KNIGHT:
+                        cout << "桂";
+                        break;
+                    case LANCE:
+                        cout << "香";
+                        break;
+                    case BISHOP:
+                        cout << "角";
+                        break;
+                    case ROOK:
+                        cout << "飛";
+                        break;
+                    case PAWN:
+                        cout << "歩";
+                        break;
+                }
             }
+
+            else if (kanji_pieces == false) {
+
+                switch (board[i][k]) {
+
+                    case EMPTY:
+                        cout << "#";
+                        break;
+                    case KING:
+                        cout << "K";
+                        break;
+                    case GOLD:
+                        cout << "G";
+                        break;
+                    case SILVER:
+                        cout << "S";
+                        break;
+                    case KNIGHT:
+                        cout << "N";
+                        break;
+                    case LANCE:
+                        cout << "L";
+                        break;
+                    case BISHOP:
+                        cout << "B";
+                        break;
+                    case ROOK:
+                        cout << "R";
+                        break;
+                    case PAWN:
+                        cout << "P";
+                        break;
+                }
+            }
+
         }
         cout << endl;
     }
@@ -251,7 +374,7 @@ void valid_move_check(int from_row, int from_col, int to_row, int to_col, const 
                         break;
                     }
 
-                    //cout << total_spaces << endl;
+                    cout << total_spaces << endl;
                     total_spaces++;
                 }
 
@@ -272,7 +395,7 @@ void valid_move_check(int from_row, int from_col, int to_row, int to_col, const 
             int min_spaces_v;
             int max_spaces_v;
 
-            bool no_check;     //Didn't work when I used the stop_check variable, so just declared a new one.
+            bool no_check;
 
             if (sente_turn == true) {
 
