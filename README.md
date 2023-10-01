@@ -7,6 +7,8 @@ TODO:
     SILVER Movement
     GOLD Movement
     KING Movement
+    Captures
+    Promotion
     Shogi Computer to play against
     Handicap modes
     
