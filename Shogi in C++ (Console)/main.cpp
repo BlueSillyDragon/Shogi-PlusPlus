@@ -1,22 +1,23 @@
 #include <iostream>
 #include <vector>
-#include <string>
+#include "language.h"
 
 using namespace std;
 
 // Global Variables
-enum space {EMPTY, KING, GOLD, SILVER, KNIGHT, LANCE, BISHOP, ROOK, PAWN};
+enum space {EMPTY, KING, GOLD, SILVER, KNIGHT, LANCE, BISHOP, ROOK, PAWN, wKING, wGOLD, wSILVER, wKNIGHT, wLANCE, wBISHOP, wROOK, wPAWN};
 bool valid_move;
 bool sente_turn = true;
 bool kanji_pieces = true;
+bool japanese = true;
 
 string turn = "Sente";
 
 vector<vector<space>> board {
 
-    {LANCE, KNIGHT, SILVER, GOLD, KING, GOLD, SILVER, KNIGHT, LANCE},
-    {EMPTY, ROOK, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, BISHOP, EMPTY},
-    {PAWN, PAWN, PAWN, PAWN, PAWN, PAWN, PAWN, PAWN, PAWN},
+    {wLANCE, wKNIGHT, wSILVER, wGOLD, wKING, wGOLD, wSILVER, wKNIGHT, wLANCE},
+    {EMPTY, wROOK, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, wBISHOP, EMPTY},
+    {wPAWN, wPAWN, wPAWN, wPAWN, wPAWN, wPAWN, wPAWN, wPAWN, wPAWN},
     {EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY},
     {EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY},
     {EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY},
@@ -39,25 +40,37 @@ int main()
     bool go_back;
     bool invalid;
 
-    cout << "AoSakura's C++ Shogi Program." << endl << endl;
+    if (japanese == false)
+        cout << en_title << endl << endl;
+    else
+        cout << jp_title << endl << endl;
     display_board(board);
 
     do {
 
-        cout << endl << "What action would you like to preform? (N)ew Game, (S)ettings, (Q)uit" << endl;
+        if (japanese == false)
+            cout << endl << en_options_prompt << endl;
+        else
+            cout << endl << jp_options_prompt << endl;
         cin >> choice;
 
         switch (choice) {
 
         case 'n':
         case 'N':
-            cout << "Starting new game." << endl << endl;
+            if (japanese == false)
+                cout << en_newgame_start << endl << endl;
+            else
+                cout << jp_newgame_start << endl;
             go_back = false;
             invalid = false;
             break;
         case 's':
         case 'S':
-            cout << "What would you like to change? (L)anguage, (P)ieces, (B)ack" << endl;
+            if (japanese == false)
+                cout << en_settings << endl;
+            else
+                cout << jp_settings << endl;
             go_back = false;
             invalid = false;
             cin >> choice;
@@ -66,15 +79,39 @@ int main()
 
                 case 'l':
                 case 'L':
-                    cout << "Select Language, (E)nglish, (J)apanese" << endl;
+                    if (japanese == false)
+                        cout << en_language_change << endl;
+                    else
+                        cout << jp_language_change << endl;
+                    cin >> choice;
 
-                    go_back = false;
+                    switch (choice) {
+
+                        case 'e':
+                        case 'E':
+                            japanese = false;
+                            break;
+                        case 'j':
+                        case 'J':
+                            japanese = true;
+                            break;
+                        default:
+                            if (japanese == false)
+                                cout << en_invalid_choice << endl;
+                            else
+                                cout << jp_invalid_choice << endl;
+                    }
+
+                    go_back = true;
                     invalid = false;
 
                     break;
                 case 'p':
                 case 'P':
-                    cout << "Choose Piece set, (K)anji, (I)nternational" << endl;
+                    if (japanese == false)
+                        cout << en_piece_change << endl;
+                    else
+                        cout << jp_piece_change << endl;
                     cin >> choice;
 
                     switch (choice) {
@@ -90,7 +127,10 @@ int main()
                             go_back = true;
                             break;
                         default:
-                            cout << "Not a valid choice!" << endl;
+                            if (japanese == false)
+                                cout << en_invalid_choice << endl;
+                            else
+                                cout << jp_invalid_choice << endl;
                             invalid = true;
                             break;
                     }
@@ -101,17 +141,26 @@ int main()
                     go_back = true;
                     break;
                 default:
-                    cout << "Not a valid choice!" << endl;
+                    if (japanese == false)
+                        cout << en_invalid_choice << endl;
+                    else
+                        cout << jp_invalid_choice << endl;
                     invalid = true;
             }
 
             break;
         case 'q':
         case 'Q':
-            cout << "Exiting..." << endl;
+            if (japanese == false)
+                cout << en_exit << endl;
+            else
+                cout << jp_exit << endl;
             return 0;
         default:
-            cout << "Not a valid choice!" << endl;
+            if (japanese == false)
+                cout << en_invalid_choice << endl;
+            else
+                cout << jp_invalid_choice << endl;
             invalid = true;
             break;
         }
@@ -142,27 +191,35 @@ void display_board(const vector<vector<space>>& b) {
                         cout << "空";
                         break;
                     case KING:
+                    case wKING:
                         cout << "王";
                         break;
                     case GOLD:
+                    case wGOLD:
                         cout << "金";
                         break;
                     case SILVER:
+                    case wSILVER:
                         cout << "銀";
                         break;
                     case KNIGHT:
+                    case wKNIGHT:
                         cout << "桂";
                         break;
                     case LANCE:
+                    case wLANCE:
                         cout << "香";
                         break;
                     case BISHOP:
+                    case wBISHOP:
                         cout << "角";
                         break;
                     case ROOK:
+                    case wROOK:
                         cout << "飛";
                         break;
                     case PAWN:
+                    case wPAWN:
                         cout << "歩";
                         break;
                 }
