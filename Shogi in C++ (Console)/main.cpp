@@ -323,54 +323,54 @@ void valid_move_check(int from_row, int from_col, int to_row, int to_col, const 
             valid_move = false;
             return;
         case PAWN:
-            if (sente_turn == true) {
 
-                if ((to_row - 1) != (from_row - 1) - 1 || (to_col - 1) != (from_col - 1)) {
-
-                    cout << "Not a valid Pawn move! Or you tried to move an opponents piece!" << endl;
-                    valid_move = false;
-                    return;
-                }
-            }
-
-            else if (sente_turn != true) {
-
-                if ((to_row - 1) != (from_row - 1) + 1 || (to_col - 1) != (from_col - 1)) {
+                if (((to_row - 1) != (from_row - 1) - 1 || (to_col - 1) != (from_col - 1)) || sente_turn == false) {
 
                     cout << "Not a valid Pawn move! Or you tried to move an opponents piece!" << endl;
                     valid_move = false;
                     return;
                 }
-            }
 
             valid_move = true;
 
+            break;
+        case wPAWN:
+
+            if (((to_row - 1) != (from_row - 1) + 1 || (to_col - 1) != (from_col - 1)) || sente_turn == true) {
+
+                    cout << "Not a valid Pawn move! Or you tried to move an opponents piece!" << endl;
+                    valid_move = false;
+                    return;
+                }
+
+            valid_move = true;
             break;
 
         case KNIGHT:
-            if (sente_turn == true) {
 
-                if ((to_row - 1) != (from_row - 1) - 2 && ((to_col - 1) != (from_col - 1) - 1 || (to_col - 1) != (from_col - 1) + 1)) {
-
-                    cout << "Not a valid Knight move! Or you tried to move an opponents piece!" << endl;
-                    valid_move = false;
-                    return;
-                }
-            }
-
-            else if (sente_turn != true) {
-
-                if ((to_row - 1) != (from_row - 1) + 2 && ((to_col - 1) != (from_col - 1) - 1 || (to_col - 1) != (from_col - 1) + 1)) {
+                if (((to_row - 1) != (from_row - 1) - 2 && ((to_col - 1) != (from_col - 1) - 1 || (to_col - 1) != (from_col - 1) + 1)) || sente_turn == false) {
 
                     cout << "Not a valid Knight move! Or you tried to move an opponents piece!" << endl;
                     valid_move = false;
                     return;
                 }
-            }
 
             valid_move = true;
 
             break;
+        case wKNIGHT:
+
+                if (((to_row - 1) != (from_row - 1) + 2 && ((to_col - 1) != (from_col - 1) - 1 || (to_col - 1) != (from_col - 1) + 1)) || sente_turn == true) {
+
+                    cout << "Not a valid Knight move! Or you tried to move an opponents piece!" << endl;
+                    valid_move = false;
+                    return;
+                }
+
+            valid_move = true;
+
+            break;
+
         case LANCE:
             int total_spaces;
             bool stop_check;
@@ -568,9 +568,30 @@ void valid_move_check(int from_row, int from_col, int to_row, int to_col, const 
 
         if (b[to_row - 1][to_col - 1] != EMPTY) {
 
-            cout << "That is not a empty space!" << endl;
-            valid_move = false;
-            return;
+            if ((b[to_row - 1][to_col - 1] == PAWN || b[to_row - 1][to_col - 1] == KNIGHT || b[to_row - 1][to_col - 1] == LANCE || b[to_row - 1][to_col - 1] == SILVER || b[to_row - 1][to_col - 1] == GOLD || b[to_row - 1][to_col - 1] == ROOK || b[to_row - 1][to_col - 1] == BISHOP || b[to_row - 1][to_col - 1] == KING) && (sente_turn == true)) {
+
+                cout << "You can not capture one of your own pieces!" << endl;
+                valid_move = false;
+                return;
+            }
+
+            else if ((b[to_row - 1][to_col - 1] == wPAWN || b[to_row - 1][to_col - 1] == wKNIGHT || b[to_row - 1][to_col - 1] == wLANCE || b[to_row - 1][to_col - 1] == wSILVER || b[to_row - 1][to_col - 1] == wGOLD || b[to_row - 1][to_col - 1] == wROOK || b[to_row - 1][to_col - 1] == wBISHOP || b[to_row - 1][to_col - 1] == wKING) && (sente_turn == false)) {
+
+                cout << "You can not capture one of your own pieces!" << endl;
+                valid_move = false;
+                return;
+            }
+
+            else {
+
+                cout << "CAPTURE" << endl;
+                valid_move = true;
+                return;
+            }
+
+            //cout << "That is not a empty space!" << endl;
+            //valid_move = false;
+            //return;
         }
 
         else {
