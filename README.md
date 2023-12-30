@@ -1,5 +1,6 @@
 # Shogi-PlusPlus
-A Shogi app made in C++, Doesn't have much funcionality, just a fun project I decided to try.
+A Shogi++ is a Shogi UI app made in entirely in C++. 
+Basic funcionality planned, such as KIF notation, AI Intergration, either Lesserkai or YaneuraOU, and Handicap modes.
 
 Feature list:
 
