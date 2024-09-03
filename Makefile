@@ -1,5 +1,5 @@
 CC=g++
-CPPFLAGS= -O2
+CPPFLAGS= -Wall -Wextra -O2 -I src
 
 SRC=src
 BUILD=build
@@ -9,7 +9,7 @@ BUILD=build
 all: always build
 
 build:
-	$(CC) $(CPPFLAGS) $(SRC)/main.cpp -o $(BUILD)/Shogi++
+	$(CC) $(CPPFLAGS) $(SRC)/shogi.cpp $(SRC)/main.cpp -o $(BUILD)/Shogi++
 
 
 always:

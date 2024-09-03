@@ -1,5 +1,6 @@
 #include <iostream>
 #include "inc/language.h"
+#include "inc/shogi.h"
 
 using namespace std;
 
@@ -13,5 +14,8 @@ int main () {
 			cout << jp_title << endl;
 			break;
 	}
+
+	printBoard();
+
 	return 0;
 }
