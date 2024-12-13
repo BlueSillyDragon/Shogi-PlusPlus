@@ -13,7 +13,7 @@ Feature list:
 
 ## Gameplay
 - [ ] Sente/Gote differentiation
-- [ ] PAWN Movement
+- [x] PAWN Movement
 - [ ] KNIGHT Movement
 - [ ] LANCE Movement
 - [ ] BISHOP Movement
