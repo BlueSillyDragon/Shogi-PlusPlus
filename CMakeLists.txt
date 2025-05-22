@@ -1,5 +1,9 @@
-cmake_minimum_required(VERSION 3.16)
-
+cmake_minimum_required(VERSION 3.31)
 project(Shogi++)
 
-add_executable(Shogi++ src/main.cpp src/shogi.cpp src/game.cpp)
+set(CMAKE_CXX_STANDARD 20)
+
+add_executable(Shogi++ main.cpp
+        shogi.cpp)
+
+target_include_directories(Shogi++ PRIVATE inc)
