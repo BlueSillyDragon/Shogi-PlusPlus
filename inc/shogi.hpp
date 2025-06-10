@@ -5,6 +5,8 @@
 #ifndef SHOGI_HPP
 #define SHOGI_HPP
 
+#include <vector>
+
 enum SIDE {SENTE, GOTE};
 enum SQUARE {PAWN, LANCE, KNIGHT, SILVER, GOLD, BISHOP, ROOK, KING, EMPTY};
 
@@ -17,6 +19,23 @@ namespace kif {
         OPERATION operation;
         unsigned int square;
     } kifMove_t;
+}
+
+namespace shogi {
+    class Game {
+    public:
+        Game();
+        void gameStart();
+        bool isValidMove(kif::kifMove_t move);
+    private:
+        bool onGoing = false;
+        bool currentSide = true; // true = Sente; false = Gote
+        bool sIsCheck = false;
+        bool gIsCheck = false;
+        kif::kifMove_t currentMove;
+        std::vector<kif::PIECE> senteHand;
+        std::vector<kif::PIECE> goteHand;
+    };
 }
 
 // Returns the amount of empty/occupied squares

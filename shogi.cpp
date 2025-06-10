@@ -355,3 +355,18 @@ void display_board() {
     }
     std::cout << std::endl;
 }
+
+shogi::Game::Game() {
+
+}
+
+void shogi::Game::gameStart() {
+    onGoing = true;
+    while (onGoing) {
+        display_board();
+
+        if (!parse_kif_move(currentMove)) {
+            printf("Parse error!\n");
+        } else printf("Parse success!\n");
+    }
+}

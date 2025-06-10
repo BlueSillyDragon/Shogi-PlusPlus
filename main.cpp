@@ -3,12 +3,7 @@
 
 int main()
 {
-    kif::kifMove_t currentMove;
-
-    display_board();
-
-    if (!parse_kif_move(currentMove)) {
-        printf("Parse error!\n");
-    } else printf("Parse success!\n");
+    shogi::Game game;
+    game.gameStart();
     return 0;
 }
