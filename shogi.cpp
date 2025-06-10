@@ -36,33 +36,29 @@ int color[81] = {
     EMPTY, SENTE, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, SENTE, EMPTY,
     SENTE, SENTE, SENTE, SENTE, SENTE, SENTE, SENTE, SENTE, SENTE};
 
-int empty_squares()
-{
+int empty_squares() {
     // This function checks to see how many spaces are empty
     int emptyNum = 0;
-    for (int i = 0; i < 81; i++)
-        {
-            if (piece[i] == EMPTY)
-                {
-                    emptyNum++;
-                }
+    for (int i = 0; i < 81; i++) {
+            if (piece[i] == EMPTY) {
+                emptyNum++;
+            }
         }
     return emptyNum;
 }
 
-int occupied_squares()
-{
+int occupied_squares() {
     // This function checks to see how many spaces are occupied
     int occupyNum = 0;
-    for (int i : piece)
-        {
-            occupyNum++;
+    for (int i = 0; i < 81; i++) {
+            if (piece[i] != EMPTY) {
+                occupyNum++;
+            }
         }
     return occupyNum;
 }
 
-int gote_pieces()
-{
+int gote_pieces() {
     // This function returns the amount of pieces sente has
     int gotePieces = 0;
     for (int i = 0; i < 81; i++)
@@ -137,58 +133,75 @@ void print_piece_type(int piece)
     }
 }
 
-void parse_kif_move() {
-    std::string kifMove;
+// Asks the user for a string and parses it for KIF notation
+bool parse_kif_move(kif::kifMove_t &move) {
 
+    std::string kifMove;
     std::cin >> kifMove;
 
     if (!isalpha(kifMove.at(0))) {
         std::cout << "Invalid Move!" << std::endl;
+        return false;
     }
-    else {
-        switch(kifMove.at(0)) {
-            case 'P':
-                std::cout << "A Pawn is ";
-                break;
-            case 'N':
-                std::cout << "A Knight is ";
-                break;
-            case 'L':
-                std::cout << "A Lance is ";
-                break;
-            case 'S':
-                std::cout << "A Silver is ";
-                break;
-            case 'G':
-                std::cout << "A Gold is ";
-                break;
-            case 'B':
-                std::cout << "A Bishop is ";
-                break;
-            case 'R':
-                std::cout << "A Rook is ";
-                break;
-            case 'K':
-                std::cout << "The King is ";
-                break;
-            default:
-                std::cout << "Not a valid piece" << std::endl;
-        }
+    switch(kifMove.at(0)) {
+        case 'P':
+            std::cout << "A Pawn is ";
+            move.piece = kif::PAWN;
+            break;
+        case 'N':
+            std::cout << "A Knight is ";
+            move.piece = kif::KNIGHT;
+            break;
+        case 'L':
+            std::cout << "A Lance is ";
+            move.piece = kif::LANCE;
+            break;
+        case 'S':
+            std::cout << "A Silver is ";
+            move.piece = kif::SILVER;
+            break;
+        case 'G':
+            std::cout << "A Gold is ";
+            move.piece = kif::GOLD;
+            break;
+        case 'B':
+            std::cout << "A Bishop is ";
+            move.piece = kif::BISHOP;
+            break;
+        case 'R':
+            std::cout << "A Rook is ";
+            move.piece = kif::ROOK;
+            break;
+        case 'K':
+            std::cout << "The King is ";
+            move.piece = kif::KING;
+            break;
+        default:
+            std::cout << "Not a valid piece" << std::endl;
+            return false;
+    }
 
-        switch(kifMove.at(1)) {
-            case '-':
-                std::cout << "moving" << std::endl;
-                break;
-            case 'x':
-                std::cout << "capturing" << std::endl;
-                break;
-            case '*':
-                std::cout << "being placed" << std::endl;
-                break;
-            default:
-                std::cout << "Invalid move indicator" << std::endl;
-        }
+    switch(kifMove.at(1)) {
+        case '-':
+            std::cout << "moving" << std::endl;
+            move.operation = kif::MOVE;
+            break;
+        case 'x':
+            std::cout << "capturing" << std::endl;
+            move.operation = kif::CAPTURE;
+            break;
+        case '*':
+            std::cout << "being placed" << std::endl;
+            move.operation = kif::STRIKE;
+            break;
+        default:
+            std::cout << "Invalid move indicator" << std::endl;
+            return false;
     }
+    kifMove.erase(0, 2);
+    move.square = atoi(kifMove.c_str());
+
+    return true;
 }
 
 
@@ -301,7 +314,44 @@ int eval() {
                 return final_score;
             }
         else {
-                final_score == final_score * -2;
+                final_score = final_score * -2;
                 return final_score;
             }
+}
+
+void display_board() {
+    for (int i = 0; i < 81; i++) {
+        if (i % 9 == 0) {
+            std::cout << std::endl;
+        }
+        switch (piece[i]) {
+            case PAWN:
+                std::cout << "[P]";
+                break;
+            case LANCE:
+                std::cout << "[L]";
+                break;
+            case KNIGHT:
+                std::cout << "[N]";
+                break;
+            case SILVER:
+                std::cout << "[S]";
+                break;
+            case GOLD:
+                std::cout << "[G]";
+                break;
+            case BISHOP:
+                std::cout << "[B]";
+                break;
+            case ROOK:
+                std::cout << "[R]";
+                break;
+            case KING:
+                std::cout << "[K]";
+                break;
+            default:
+                std::cout << "[ ]";
+        }
+    }
+    std::cout << std::endl;
 }
