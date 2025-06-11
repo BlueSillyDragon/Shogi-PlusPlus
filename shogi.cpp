@@ -201,6 +201,10 @@ bool parse_kif_move(kif::kifMove_t &move) {
     kifMove.erase(0, 2);
     move.square = atoi(kifMove.c_str());
 
+    if (move.square < 11) {
+        return false;
+    }
+
     return true;
 }
 
@@ -356,9 +360,72 @@ void display_board() {
     std::cout << std::endl;
 }
 
+//======================
+// shogi::Game functions
+//======================
+
 shogi::Game::Game() {
 
 }
+
+int shogi::Game::calculatePawn(unsigned int toSquare) {
+    int ret;
+
+    if (toSquare < 11 || toSquare > 99) {
+        return 0;
+    }
+
+    unsigned int file = (toSquare / 10);
+    unsigned int rank = (toSquare % 10);
+    printf("File %d | Rank %d\n", file, rank);
+
+    if (piece_at_pos(file, rank + 1) == kif::PAWN) {
+        printf("Valid pawn move!\n");
+        ret = piece_at_pos(file, rank) == EMPTY ? 1 : -1;
+    } else {
+        printf("Invalid pawn move!\n");
+        ret = 0;
+    }
+    printf("ret: %d\n", ret);
+    return ret;
+}
+
+
+bool shogi::Game::isValidMove(kif::kifMove_t move) {
+
+    int calcResult = 0;
+
+    switch (move.piece) {
+        case kif::PAWN:
+            calcResult = calculatePawn(move.square);
+            break;
+    }
+
+    if (calcResult == 0) {
+        return false;
+    }
+
+    switch (move.operation) {
+        case kif::MOVE:
+            if (calcResult != 1) {
+                return false;
+            }
+            break;
+        case kif::CAPTURE:
+            if (calcResult != -1) {
+                return false;
+            }
+            break;
+        case kif::STRIKE:
+            if (senteHand.empty()) {
+                return false;
+            }
+            break;
+    }
+
+    return true;
+}
+
 
 void shogi::Game::gameStart() {
     onGoing = true;
@@ -368,5 +435,10 @@ void shogi::Game::gameStart() {
         if (!parse_kif_move(currentMove)) {
             printf("Parse error!\n");
         } else printf("Parse success!\n");
+
+        while (!isValidMove(currentMove)) {
+            printf("Please try again!\n");
+            parse_kif_move(currentMove);
+        }
     }
 }

@@ -35,6 +35,20 @@ namespace shogi {
         kif::kifMove_t currentMove;
         std::vector<kif::PIECE> senteHand;
         std::vector<kif::PIECE> goteHand;
+
+        /* These functions calculate whether or not a piece can move to a certain square
+           the return values are as follows
+           0 = Invalid Move (or no piece of that type is able to reach that square)
+           1 = A valid move
+           -1 = Valid, but another piece occupies that square (isValidMove will check if the player
+           is trying to capture that piece*/
+        int calculatePawn(unsigned int toSquare);
+        int calculateLance(unsigned int toSquare);
+        int calculateKnight(unsigned int toSquare);
+        int calculateSilver(unsigned int toSquare);
+        int calculateGold(unsigned int toSquare);
+        int calculateBishop(unsigned int toSquare);
+        int calculateRook(unsigned int toSquare);
     };
 }
 
