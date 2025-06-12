@@ -12,14 +12,14 @@ Feature list:
 - [ ] Board/Pieces
 
 ## Gameplay
-- [ ] Sente/Gote differentiation
-- [ ] kif::PAWN Movement
-- [ ] kif::KNIGHT Movement
-- [ ] kif::LANCE Movement
+- [x] Sente/Gote differentiation
+- [x] PAWN Movement
+- [x] KNIGHT Movement
+- [ ] LANCE Movement
 - [ ] BISHOP Movement
 - [ ] ROOK Movement
-- [ ] kif::SILVER Movement
-- [ ] kif::GOLD Movement
+- [ ] SILVER Movement
+- [ ] GOLD Movement
 - [ ] KING Movement
 - [ ] Captures
 - [ ] Striking pieces

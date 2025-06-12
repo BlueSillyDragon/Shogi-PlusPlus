@@ -49,12 +49,12 @@ namespace shogi {
            -1 = Valid, but another piece occupies that square (isValidMove will check if the player
            is trying to capture that piece*/
         int calculatePawn(unsigned int toSquare, unsigned int &pieceSquare);
-        int calculateLance(unsigned int toSquare);
-        int calculateKnight(unsigned int toSquare);
-        int calculateSilver(unsigned int toSquare);
-        int calculateGold(unsigned int toSquare);
-        int calculateBishop(unsigned int toSquare);
-        int calculateRook(unsigned int toSquare);
+        int calculateLance(unsigned int toSquare, unsigned int &pieceSquare);
+        int calculateKnight(unsigned int toSquare, unsigned int &pieceSquare);
+        int calculateSilver(unsigned int toSquare, unsigned int &pieceSquare);
+        int calculateGold(unsigned int toSquare, unsigned int &pieceSquare);
+        int calculateBishop(unsigned int toSquare, unsigned int &pieceSquare);
+        int calculateRook(unsigned int toSquare, unsigned int &pieceSquare);
     };
 }
 

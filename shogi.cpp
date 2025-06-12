@@ -439,6 +439,33 @@ int shogi::Game::calculatePawn(unsigned int toSquare, unsigned int &pieceSquare)
     return ret;
 }
 
+int shogi::Game::calculateKnight(unsigned int toSquare, unsigned int &pieceSquare) {
+    int ret;
+
+    if (toSquare < 11 || toSquare > 99) {
+        return 0;
+    }
+
+    unsigned int file = (toSquare / 10);
+    unsigned int rank = (toSquare % 10);
+    printf("File %d | Rank %d\n", file, rank);
+
+    if (piece_at_pos(file + 1, rank + (currentSide == true ? 2 : -2)) == kif::KNIGHT) {
+        printf("Valid knight move!\n");
+        pieceSquare = (((file + 1) * 10) + rank + (currentSide == true ? 2 : -2));
+        ret = piece_at_pos(file, rank) == EMPTY ? 1 : -1;
+    } else if (piece_at_pos(file - 1, rank + (currentSide == true ? 2 : -2)) == kif::KNIGHT) {
+        printf("Valid knight move!\n");
+        pieceSquare = (((file - 1) * 10) + rank + (currentSide == true ? 2 : -2));
+        ret = piece_at_pos(file, rank) == EMPTY ? 1 : -1;
+    } else {
+        printf("Invalid knight move!\n");
+        ret = 0;
+    }
+    printf("ret: %d\n", ret);
+    return ret;
+}
+
 bool shogi::Game::findPieceInHand(SIDE side, kif::PIECE piece, int &id) {
     switch (side) {
         case SENTE:
@@ -500,6 +527,9 @@ bool shogi::Game::isValidMove(kif::kifMove_t move, unsigned int &pieceSquare) {
     switch (move.piece) {
         case kif::PAWN:
             calcResult = calculatePawn(move.square, pieceSquare);
+            break;
+        case kif::KNIGHT:
+            calcResult = calculateKnight(move.square, pieceSquare);
             break;
     }
 
