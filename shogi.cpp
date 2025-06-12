@@ -427,9 +427,9 @@ int shogi::Game::calculatePawn(unsigned int toSquare, unsigned int &pieceSquare)
     unsigned int rank = (toSquare % 10);
     printf("File %d | Rank %d\n", file, rank);
 
-    if (piece_at_pos(file, rank + 1) == kif::PAWN) {
+    if (piece_at_pos(file, rank + (currentSide == true ? 1 : -1)) == kif::PAWN) {
         printf("Valid pawn move!\n");
-        pieceSquare = ((file * 10) + rank + 1);
+        pieceSquare = ((file * 10) + rank + (currentSide == true ? 1 : -1));
         ret = piece_at_pos(file, rank) == EMPTY ? 1 : -1;
     } else {
         printf("Invalid pawn move!\n");
@@ -535,6 +535,10 @@ void shogi::Game::gameStart() {
     while (onGoing) {
         display_board();
 
+        if (currentSide) {
+            printf("Sente's Turn: ");
+        } else printf("Gote's Turn: ");
+
         if (!parse_kif_move(currentMove)) {
             printf("Parse error!\n");
         } else printf("Parse success!\n");
@@ -545,5 +549,6 @@ void shogi::Game::gameStart() {
         }
 
         performPieceOp(currentMove.operation, currentMove.square, pieceSquare);
+        currentSide = !currentSide;
     }
 }
