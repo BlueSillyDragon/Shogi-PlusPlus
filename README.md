@@ -13,13 +13,13 @@ Feature list:
 
 ## Gameplay
 - [ ] Sente/Gote differentiation
-- [ ] PAWN Movement
-- [ ] KNIGHT Movement
-- [ ] LANCE Movement
+- [ ] kif::PAWN Movement
+- [ ] kif::KNIGHT Movement
+- [ ] kif::LANCE Movement
 - [ ] BISHOP Movement
 - [ ] ROOK Movement
-- [ ] SILVER Movement
-- [ ] GOLD Movement
+- [ ] kif::SILVER Movement
+- [ ] kif::GOLD Movement
 - [ ] KING Movement
 - [ ] Captures
 - [ ] Striking pieces

@@ -133,6 +133,54 @@ void print_piece_type(int piece)
     }
 }
 
+kif::PIECE squareToPiece(SQUARE square) {
+    switch (square) {
+        case EMPTY:
+            return kif::NONE;
+        case PAWN:
+            return kif::PAWN;
+        case LANCE:
+            return kif::LANCE;
+        case KNIGHT:
+            return kif::KNIGHT;
+        case SILVER:
+            return kif::SILVER;
+        case GOLD:
+            return kif::GOLD;
+        case BISHOP:
+            return kif::BISHOP;
+        case ROOK:
+            return kif::ROOK;
+        case KING:
+            return kif::KING;
+    }
+    return kif::NONE;
+}
+
+int pieceToSquare(kif::PIECE piece) {
+    switch (piece) {
+        case kif::NONE:
+            return EMPTY;
+        case kif::PAWN:
+            return PAWN;
+        case kif::LANCE:
+            return LANCE;
+        case kif::KNIGHT:
+            return KNIGHT;
+        case kif::SILVER:
+            return SILVER;
+        case kif::GOLD:
+            return GOLD;
+        case kif::BISHOP:
+            return BISHOP;
+        case kif::ROOK:
+            return ROOK;
+        case kif::KING:
+            return KING;
+    }
+    return EMPTY;
+}
+
 // Asks the user for a string and parses it for KIF notation
 bool parse_kif_move(kif::kifMove_t &move) {
 
@@ -368,7 +416,7 @@ shogi::Game::Game() {
 
 }
 
-int shogi::Game::calculatePawn(unsigned int toSquare) {
+int shogi::Game::calculatePawn(unsigned int toSquare, unsigned int &pieceSquare) {
     int ret;
 
     if (toSquare < 11 || toSquare > 99) {
@@ -381,6 +429,7 @@ int shogi::Game::calculatePawn(unsigned int toSquare) {
 
     if (piece_at_pos(file, rank + 1) == kif::PAWN) {
         printf("Valid pawn move!\n");
+        pieceSquare = ((file * 10) + rank + 1);
         ret = piece_at_pos(file, rank) == EMPTY ? 1 : -1;
     } else {
         printf("Invalid pawn move!\n");
@@ -390,14 +439,67 @@ int shogi::Game::calculatePawn(unsigned int toSquare) {
     return ret;
 }
 
+bool shogi::Game::findPieceInHand(SIDE side, kif::PIECE piece, int &id) {
+    switch (side) {
+        case SENTE:
+            if (senteHand.empty()) {
+                return false;
+            }
+            for (int i = 0; i < senteHand.size(); i++) {
+                if (senteHand[i] == piece) {
+                    id = i;
+                    return true;
+                }
+            } return false;
+        case GOTE:
+            if (goteHand.empty()) {
+                return false;
+            }
+            for (int i = 0; i < goteHand.size(); i++) {
+                if (goteHand[i] == piece) {
+                    id = i;
+                    return true;
+                }
+            } return false;
+        default:
+            return false;
+    }
+    // Unreachable, but just in case
+    __builtin_unreachable();
+}
 
-bool shogi::Game::isValidMove(kif::kifMove_t move) {
+
+void shogi::Game::performPieceOp(kif::OPERATION op, const unsigned int toSquare, const unsigned int pieceSquare) {
+    unsigned int file = (toSquare / 10);
+    unsigned int rank = (toSquare % 10);
+    unsigned int originFile = (pieceSquare / 10);
+    unsigned int originRank = (pieceSquare % 10);
+    kif::PIECE oldPiece;
+    kif::PIECE pieceToOp;
+    int handId = 0;
+
+    // NOTE! It's very important that isValidMove is called before this,
+    // especially due to this line. We save the toSquare and put it in the player's hand
+    // regardless of whether or not it's EMPTY (Only if the operation is kif::CAPTURE)
+    oldPiece = squareToPiece((SQUARE)piece_at_pos(file, rank));
+
+    pieceToOp = squareToPiece((SQUARE)piece_at_pos(originFile, originRank));
+    print_piece_type(piece_at_pos(file, rank));
+    print_piece_type(piece_at_pos(originFile, originRank));
+
+    if (op == kif::MOVE) {
+        piece[file_to_index(file) + rank_to_index(rank)] = pieceToSquare(pieceToOp);
+        piece[file_to_index(originFile) + rank_to_index(originRank)] = EMPTY;
+    }
+}
+
+bool shogi::Game::isValidMove(kif::kifMove_t move, unsigned int &pieceSquare) {
 
     int calcResult = 0;
 
     switch (move.piece) {
         case kif::PAWN:
-            calcResult = calculatePawn(move.square);
+            calcResult = calculatePawn(move.square, pieceSquare);
             break;
     }
 
@@ -429,6 +531,7 @@ bool shogi::Game::isValidMove(kif::kifMove_t move) {
 
 void shogi::Game::gameStart() {
     onGoing = true;
+    unsigned int pieceSquare;
     while (onGoing) {
         display_board();
 
@@ -436,9 +539,11 @@ void shogi::Game::gameStart() {
             printf("Parse error!\n");
         } else printf("Parse success!\n");
 
-        while (!isValidMove(currentMove)) {
+        while (!isValidMove(currentMove, pieceSquare)) {
             printf("Please try again!\n");
             parse_kif_move(currentMove);
         }
+
+        performPieceOp(currentMove.operation, currentMove.square, pieceSquare);
     }
 }

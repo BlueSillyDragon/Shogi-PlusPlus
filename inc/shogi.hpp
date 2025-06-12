@@ -12,7 +12,7 @@ enum SQUARE {PAWN, LANCE, KNIGHT, SILVER, GOLD, BISHOP, ROOK, KING, EMPTY};
 
 namespace kif {
     enum OPERATION {MOVE, CAPTURE, STRIKE};
-    enum PIECE {PAWN, LANCE, KNIGHT, SILVER, GOLD, BISHOP, ROOK, KING};
+    enum PIECE {PAWN, LANCE, KNIGHT, SILVER, GOLD, BISHOP, ROOK, KING, NONE};
 
     typedef struct {
         PIECE piece;
@@ -26,7 +26,13 @@ namespace shogi {
     public:
         Game();
         void gameStart();
-        bool isValidMove(kif::kifMove_t move);
+        // Calculate functions ouputs the piece's origin square, make sure it's still accessible
+        // when invoked via isValidMove
+        bool isValidMove(kif::kifMove_t move, unsigned int &pieceSquare);
+        // This performs an operation on a piece, regardless of the legality of the move
+        // isValidMove should be called first to ensure the move is legal
+        void performPieceOp(kif::OPERATION op, unsigned int toSquare, unsigned int pieceSquare);
+        bool findPieceInHand(SIDE side, kif::PIECE piece, int &id);
     private:
         bool onGoing = false;
         bool currentSide = true; // true = Sente; false = Gote
@@ -42,7 +48,7 @@ namespace shogi {
            1 = A valid move
            -1 = Valid, but another piece occupies that square (isValidMove will check if the player
            is trying to capture that piece*/
-        int calculatePawn(unsigned int toSquare);
+        int calculatePawn(unsigned int toSquare, unsigned int &pieceSquare);
         int calculateLance(unsigned int toSquare);
         int calculateKnight(unsigned int toSquare);
         int calculateSilver(unsigned int toSquare);
